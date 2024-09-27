@@ -2,8 +2,6 @@
 sudo apt-get update
 sudo apt-get install -y \
 build-essential \
-python-software-properties \
-python \
 g++ \
 make \
 fail2ban \
@@ -16,8 +14,6 @@ ntp \
 ntpdate \
 zip \
 unzip \
-tcl \
-bcrypt \
 autoconf \
 openssl \
 libssl-dev \

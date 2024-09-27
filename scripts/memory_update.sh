@@ -11,3 +11,6 @@ sudo swapon /swapfile
 sudo cp /etc/fstab /etc/fstab.bak
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 sudo nano /etc/sysctl.conf
+ add line to it :
+        vm.swappiness=10
+        vm.vfs_cache_pressure=50

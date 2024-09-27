@@ -1,0 +1,25 @@
+flux install
+flux install \
+    --components-extra image-reflector-controller,image-automation-controller
+
+
+git repo 
+
+kubectl create secret generic flux-github-token \
+  --namespace flux-system \
+  --from-literal=username=flux-bot \
+  --from-literal=password=YOUR_GENERATED_PAT
+
+flux create source git gitrepo \
+    --url=ssh://git@github.com/utsavv27/testingci.git \
+    --branch=main \
+    --interval=3m
+
+
+Kustomization
+
+flux create kustomization flux-kust \
+    --source=gitrepo \
+    --path="./k8s/" \
+    --prune=true \
+    --interval=5m
