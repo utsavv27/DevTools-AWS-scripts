@@ -9,9 +9,7 @@ kubectl create secret docker-registry ecr-secret \
 --docker-password=$(aws ecr get-login-password)
 --namespace=project
 
-
-
-kubectl create secret docker-registry regcred \
+kubectl create secret docker-registry ecr-secret \
   --docker-server=${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com \
   --docker-username=AWS \
   --docker-password=$(aws ecr get-login-password) \
