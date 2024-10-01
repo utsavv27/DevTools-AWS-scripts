@@ -6,8 +6,8 @@
 	# match this virtual host. For the default virtual host (this file) this
 	# value is not decisive as it is used as a last resort host regardless.
 	# However, you must set it for any further virtual host explicitly.
-	ServerName digitalartistalley.com
-	ServerAlias www.digitalartistalley.com
+	ServerName example.com
+	ServerAlias www.example.com
 	ServerAdmin webmaster@localhost
 	DocumentRoot /var/www/html/frontend
 
@@ -41,7 +41,7 @@
 	# following line enables the CGI configuration for this host only
 	# after it has been globally disabled with "a2disconf".
 	#Include conf-available/serve-cgi-bin.conf
-RewriteCond %{SERVER_NAME} =digitalartistalley.com
+RewriteCond %{SERVER_NAME} =example.com
 RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
 </VirtualHost>
 
