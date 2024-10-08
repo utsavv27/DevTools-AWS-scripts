@@ -1,0 +1,100 @@
+
+docker-build:
+  # Use the official docker image.
+  image: docker:cli
+  stage: build
+  services:
+    - docker:dind
+  variables:
+    DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  # All branches are tagged with $DOCKER_IMAGE_NAME (defaults to commit ref slug)
+  # Default branch is also tagged with `latest`
+  script:
+    - docker build --pull -t "$DOCKER_IMAGE_NAME" .
+    - docker push "$DOCKER_IMAGE_NAME"
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+        docker tag "$DOCKER_IMAGE_NAME" "$CI_REGISTRY_IMAGE:latest"
+        docker push "$CI_REGISTRY_IMAGE:latest"
+      fi
+  # Run this job in a branch where a Dockerfile exists
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      exists:
+        - Dockerfile
+---
+
+#Docker registry gitlab piepline
+stages:
+  - build
+  - push
+
+variables:
+  CI_REGISTRY: docker.io
+  IMAGE_NAME: "utsavv27/gitlab-test"
+  DOCKER_DRIVER: overlay2
+
+build_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "main" || $CI_COMMIT_REF_NAME == "develop"'  # Build on main and develop branches
+
+push_image:
+  stage: push
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "main"'  # Push only on the main branch
+
+---
+
+#AWS registry gitlab piepline
+
+stages:
+  - build
+  - push
+
+variables:
+  CI_REGISTRY: <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+  AWS_REGION: "your-aws-region"                # e.g., us-east-1
+  ECR_REGISTRY: "<aws_account_id>.dkr.ecr.$AWS_REGION.amazonaws.com"  # Your AWS ECR registry URL
+  IMAGE_NAME: "$ECR_REGISTRY/your-repository-name"
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - apk add --no-cache python3 py3-pip
+  - pip3 install --no-cache --upgrade awscli  # Install AWS CLI
+
+build_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    # Build the Docker image
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+
+push_image:
+  stage: push
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    # Log in to AWS ECR
+    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+    # Push the image to ECR
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+  only:
+    - main
+
