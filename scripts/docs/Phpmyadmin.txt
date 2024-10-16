@@ -7,6 +7,10 @@ wget https://files.phpmyadmin.net/phpMyAdmin/4.5.0.2/phpMyAdmin-4.5.0.2-all-lang
 tar -jxf phpMyAdmin-4.5.0.2-all-languages.tar.bz2 -C /var/www/html
 mv phpMyAdmin-4.5.0.2-all-languages phpmyadmin
 rm -rf phpMyAdmin-4.5.0.2-all-languages.tar.bz2
+
+sudo chmod -R 755 /var/www/html/phpmyadmin
+sudo chown -R www-data:www-data /var/www/html/phpmyadmin
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 sudo service apache2 restart
 
 # extra
