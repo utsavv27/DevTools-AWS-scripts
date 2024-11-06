@@ -1,7 +1,7 @@
 
 #Installing apache(httpd) on Amazon Linux 2023
 
-sudo dnf install -y httpd git zip unzip rar openssl mod_ssl
+sudo dnf install -y httpd git zip unzip openssl mod_ssl
 sudo systemctl start httpd
 sudo systemctl enable httpd
 sudo systemctl is-enabled httpd
