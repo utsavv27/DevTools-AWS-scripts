@@ -36,6 +36,9 @@ sudo systemctl start mysqld
 sudo systemctl stop mysqld
 sudo systemctl restart mysqld
 
+# password policy set to low
+    SET GLOBAL validate_password.policy = LOW
+
 # config
     path:
     sudo nano /etc/my.cnf
