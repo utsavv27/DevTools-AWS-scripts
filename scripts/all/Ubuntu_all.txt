@@ -1,0 +1,191 @@
+General Update
+
+sudo apt-get update && sudo  apt-get dist-upgrade -y
+sudo apt-get autoremove -y
+
+---
+
+Node with nvm
+
+#!/bin/bash
+sudo apt update
+sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+source ~/.bashrc
+nvm list-remote
+nvm install v20.10.0
+
+---
+
+Memory update
+
+#!/bin/bash
+
+# Check for existing swap partitions
+echo "Checking for existing swap partitions..."
+sudo swapon --show
+
+# Check memory space
+echo "Checking memory space..."
+free -h
+
+# Check HDD space
+echo "Checking HDD space..."
+df -h
+
+# Create swap file
+SWAPFILE="/swapfile"
+SWAPSIZE="4G"
+
+echo "Creating a swap file of size $SWAPSIZE..."
+sudo fallocate -l $SWAPSIZE $SWAPFILE
+
+# Verify the swap file creation
+echo "Verifying swap file creation..."
+ls -lh $SWAPFILE
+
+# Enable swap file
+echo "Enabling the swap file..."
+sudo chmod 600 $SWAPFILE
+sudo mkswap $SWAPFILE
+sudo swapon $SWAPFILE
+
+# Make swap file permanent
+echo "Making swap file permanent..."
+sudo cp /etc/fstab /etc/fstab.bak
+echo "$SWAPFILE none swap sw 0 0" | sudo tee -a /etc/fstab
+
+# Set swappiness and cache pressure
+echo "Setting swappiness to 10 and vfs_cache_pressure to 50..."
+sudo bash -c "echo 'vm.swappiness=10' >> /etc/sysctl.conf"
+sudo bash -c "echo 'vm.vfs_cache_pressure=50' >> /etc/sysctl.conf"
+
+# Apply changes
+echo "Applying changes..."
+sudo sysctl -p
+
+echo "Swap setup complete!"
+
+---
+
+Mysql
+
+sudo apt-get install mysql-server mysql-client
+sudo apt-get install phpmyadmin
+sudo systemctl start mysql.service
+
+sudo mysql -u root -p
+
+sudo mysql
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'new_password';
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
+
+---
+
+Apache
+
+## apache install with certbot 
+sudo apt-get update
+sudo apt install apache2
+sudo a2enmod ssl
+sudo apt install certbot python3-certbot-apache
+sudo ufw enable
+sudo ufw allow 'OpenSSH'
+sudo ufw allow 'Apache Full'
+sudo ufw status
+
+## issue certificate 
+sudo certbot --apache 
+
+## restart and reload commands
+sudo systemctl reload apache2
+sudo systemctl restart apache2
+
+## Enable user defined config for apache
+sudo a2ensite default-ssl.conf
+
+## Add modes for apache
+sudo a2enmod ssl
+sudo a2enmod rewrite
+sudo a2enmod headers
+sudo a2enmod proxy_http
+sudo a2enmod deflate
+sudo a2enmod file_cache
+sudo a2enmod proxy
+sudo a2enmod expires
+sudo a2enmod userdir
+sudo a2enmod auth_digest
+
+--- 
+
+Phpmyadmin page in browser 
+
+cd /var/www/html
+sudo chown ubuntu .
+wget https://files.phpmyadmin.net/phpMyAdmin/4.5.0.2/phpMyAdmin-4.5.0.2-all-languages.tar.bz2
+tar -jxf phpMyAdmin-4.5.0.2-all-languages.tar.bz2 -C /var/www/html
+mv phpMyAdmin-4.5.0.2-all-languages phpmyadmin
+rm -rf phpMyAdmin-4.5.0.2-all-languages.tar.bz2
+
+sudo chmod -R 755 /var/www/html/phpmyadmin
+sudo chown -R www-data:www-data /var/www/html/phpmyadmin
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+sudo service apache2 restart
+
+# extra
+#   sudo apt-get install phpmyadmin php-mbstring php-gettext
+#   sudo service apache2 restart
+
+## configuration of phpmyadmin config
+sudo apt-get install phpmyadmin
+sudo nano /etc/apache2/conf-available/phpmyadmin.conf
+
+    Add the following configuration to this file:
+        # phpMyAdmin configuration
+        Alias /phpmyadmin /usr/share/phpmyadmin
+
+        <Directory /usr/share/phpmyadmin>
+            AddDefaultCharset UTF-8
+            <IfModule mod_authz_core.c>
+                # Apache 2.4
+                Require all granted
+            </IfModule>
+            <IfModule !mod_authz_core.c>
+                # Apache 2.2
+                Order Allow,Deny
+                Allow from all
+            </IfModule>
+        </Directory>
+
+        <Directory /usr/share/phpmyadmin/setup/>
+            <IfModule mod_authz_core.c>
+                # Apache 2.4
+                Require all granted
+            </IfModule>
+            <IfModule !mod_authz_core.c>
+                # Apache 2.2
+                Order Allow,Deny
+                Allow from all
+            </IfModule>
+        </Directory>
+
+sudo a2enconf phpmyadmin
+sudo systemctl reload apache2
+sudo systemctl restart apache2
+
+---
+
+Redis
+
+sudo apt-get install lsb-release curl gpg
+curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+sudo apt-get update
+sudo apt-get install redis
+
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
+
+---
