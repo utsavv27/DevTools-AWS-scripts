@@ -209,3 +209,13 @@ sudo systemctl enable redis-server
 sudo systemctl start redis-server
 
 ---
+
+certificate auto renew 
+
+sudo nano renew-cert.sh
+
+#!/bin/bash
+certbot renew --quiet --post-hook "systemctl reload apache2"
+
+# Schedule this script to run again after 80 days
+echo "/etc/apache2/sites-available/renew-cert.sh" | at now + 80 days
