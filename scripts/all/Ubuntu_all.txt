@@ -97,7 +97,7 @@ sudo mysql -u root -p
 
 sudo mysql
 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'new_password';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Dq0LDdfDWgEDb59';
 
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
 
@@ -136,6 +136,9 @@ sudo a2enmod proxy
 sudo a2enmod expires
 sudo a2enmod userdir
 sudo a2enmod auth_digest
+
+## Enable any Extra ports
+sudo ufw allow 3000 
 
 --- 
 
@@ -211,7 +214,7 @@ sudo systemctl start redis-server
 ---
 
 certificate auto renew 
-
+    
 sudo nano renew-cert.sh
 
 #!/bin/bash
