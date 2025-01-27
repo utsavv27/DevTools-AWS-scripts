@@ -1,8 +1,27 @@
-To generate password for ecr from aws account:
+# Creating a cluster
+
+eksctl create cluster \
+  --name nourish-stag \
+  --region ap-southeast-1 \
+  --version 1.31 \
+  --nodegroup-name nourish-ng \
+  --node-type t3.medimum \
+  --nodes 1 \
+  --nodes-min 1 \
+  --nodes-max 3 \
+  --ssh-access \
+  --ssh-public-key nourishubs-eks
+
+# FE docker push commands:
+
+aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 559050235085.dkr.ecr.ap-southeast-1.amazonaws.com
+
+
+# To generate password for ecr from aws account:
 aws ecr get-login-password --region us-west-2 
 
 
-creating a secret into cluster
+# Creating a secret into cluster
 kubectl create secret docker-registry ecr-secret \
 --docker-server=767397824813.dkr.ecr.us-west-2.amazonaws.com \
 --docker-username=AWS \
