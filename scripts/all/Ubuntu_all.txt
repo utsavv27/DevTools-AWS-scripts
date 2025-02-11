@@ -9,50 +9,42 @@ Memory update
 
 #!/bin/bash
 
-# Check for existing swap partitions
-echo "Checking for existing swap partitions..."
-sudo swapon --show
+# Set Swap File Size (Change as needed)
+SWAP_SIZE="8G"
+SWAP_FILE="/swapfile"
 
-# Check memory space
-echo "Checking memory space..."
+echo "🚀 Increasing Swap Memory to $SWAP_SIZE..."
+
+# Step 1: Disable existing swap if any
+echo "🔄 Disabling existing swap..."
+sudo swapoff -a
+
+# Step 2: Create a new swap file
+echo "📁 Creating swap file at $SWAP_FILE..."
+sudo fallocate -l $SWAP_SIZE $SWAP_FILE || sudo dd if=/dev/zero of=$SWAP_FILE bs=1M count=$((8 * 1024))
+
+# Step 3: Set correct permissions
+echo "🔒 Setting permissions..."
+sudo chmod 600 $SWAP_FILE
+
+# Step 4: Format as swap space
+echo "⚡ Formatting swap file..."
+sudo mkswap $SWAP_FILE
+
+# Step 5: Enable swap
+echo "✅ Enabling swap..."
+sudo swapon $SWAP_FILE
+
+# Step 6: Make swap permanent
+echo "📝 Adding swap entry to /etc/fstab..."
+echo "$SWAP_FILE none swap sw 0 0" | sudo tee -a /etc/fstab
+
+# Step 7: Verify
+echo "📊 Verifying swap..."
 free -h
+swapon --show
 
-# Check HDD space
-echo "Checking HDD space..."
-df -h
-
-# Create swap file
-SWAPFILE="/swapfile"
-SWAPSIZE="4G"
-
-echo "Creating a swap file of size $SWAPSIZE..."
-sudo fallocate -l $SWAPSIZE $SWAPFILE
-
-# Verify the swap file creation
-echo "Verifying swap file creation..."
-ls -lh $SWAPFILE
-
-# Enable swap file
-echo "Enabling the swap file..."
-sudo chmod 600 $SWAPFILE
-sudo mkswap $SWAPFILE
-sudo swapon $SWAPFILE
-
-# Make swap file permanent
-echo "Making swap file permanent..."
-sudo cp /etc/fstab /etc/fstab.bak
-echo "$SWAPFILE none swap sw 0 0" | sudo tee -a /etc/fstab
-
-# Set swappiness and cache pressure
-echo "Setting swappiness to 10 and vfs_cache_pressure to 50..."
-sudo bash -c "echo 'vm.swappiness=10' >> /etc/sysctl.conf"
-sudo bash -c "echo 'vm.vfs_cache_pressure=50' >> /etc/sysctl.conf"
-
-# Apply changes
-echo "Applying changes..."
-sudo sysctl -p
-
-echo "Swap setup complete!"
+echo "🚀 Swap memory increased successfully!"
 
 ---
 
