@@ -10,7 +10,7 @@ Memory update
 #!/bin/bash
 
 # Set Swap File Size (Change as needed)
-SWAP_SIZE="8G"
+SWAP_SIZE="4G"
 SWAP_FILE="/swapfile"
 
 echo "🚀 Increasing Swap Memory to $SWAP_SIZE..."
@@ -21,7 +21,7 @@ sudo swapoff -a
 
 # Step 2: Create a new swap file
 echo "📁 Creating swap file at $SWAP_FILE..."
-sudo fallocate -l $SWAP_SIZE $SWAP_FILE || sudo dd if=/dev/zero of=$SWAP_FILE bs=1M count=$((8 * 1024))
+sudo fallocate -l $SWAP_SIZE $SWAP_FILE || sudo dd if=/dev/zero of=$SWAP_FILE bs=1M count=$((4 * 1024))
 
 # Step 3: Set correct permissions
 echo "🔒 Setting permissions..."
@@ -214,3 +214,18 @@ certbot renew --quiet --post-hook "systemctl reload apache2"
 
 # Schedule this script to run again after 80 days
 echo "/etc/apache2/sites-available/renew-cert.sh" | at now + 80 days
+
+---
+
+# Cloning git into server
+
+ssh-keygen -t ed25519 -C "your_email@example.com"
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+
+git remote add -t * -f origin git@103.250.188.226:mohitkalariya/storyboxco_frontend.git
+
+git remote remove origin
+
+pm2 start npm --name "frontend" -- start
+
