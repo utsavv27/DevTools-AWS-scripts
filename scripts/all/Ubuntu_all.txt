@@ -68,6 +68,13 @@ pecl config-set php_ini /etc/php/7.2/apache2/php.ini
 
 ---
 
+# For ubuntu server 24
+
+sudo apt update
+sudo apt install php php-fpm php-mysql php-mbstring php-curl php-gd php-xml php-zip
+
+---
+
 Node with nvm
 
 #!/bin/bash
@@ -136,12 +143,23 @@ sudo ufw allow 3000
 
 Phpmyadmin page in browser 
 
+# ubuntu 22 / php 7.2
+
 cd /var/www/html
 sudo chown ubuntu .
 wget https://files.phpmyadmin.net/phpMyAdmin/4.5.0.2/phpMyAdmin-4.5.0.2-all-languages.tar.bz2
 tar -jxf phpMyAdmin-4.5.0.2-all-languages.tar.bz2 -C /var/www/html
 mv phpMyAdmin-4.5.0.2-all-languages phpmyadmin
 rm -rf phpMyAdmin-4.5.0.2-all-languages.tar.bz2
+
+# ubuntu 24 / php 8.3
+
+cd /var/www/html
+sudo chown ubuntu .
+wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+tar -xvf phpMyAdmin-latest-all-languages.tar.gz
+mv phpMyAdmin-*-all-languages phpmyadmin
+rm phpMyAdmin-latest-all-languages.tar.gz
 
 sudo chmod -R 755 /var/www/html/phpmyadmin
 sudo chown -R www-data:www-data /var/www/html/phpmyadmin
