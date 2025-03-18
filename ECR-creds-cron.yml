@@ -36,33 +36,33 @@ spec:
             image: odaniait/aws-kubectl:latest
             imagePullPolicy: IfNotPresent
             envFrom:
-              - secretRef:
-                  name: ecr-registry-helper-secrets
-              - configMapRef:
-                  name: ecr-registry-helper-cm
+            - secretRef:
+                name: ecr-registry-helper-secrets
+            - configMapRef:
+                name: ecr-registry-helper-cm
             command:
-              - /bin/sh
-              - -c
-              - |-
-                ECR_TOKEN=`aws ecr get-login-password --region ${AWS_REGION}`
-                DOCKER_SECRET_NAME= $DOCKER_SECRET_NAME # Replace with your secret name
+            - /bin/sh
+            - -c
+            - |-
+              ECR_TOKEN=`aws ecr get-login-password --region ${AWS_REGION}`
+              DOCKER_SECRET_NAME= $DOCKER_SECRET_NAME # Replace with your secret name
 
-                # Get a list of all namespaces
-                namespaces=$(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}')
+              # Get a list of all namespaces
+              namespaces=$(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}')
 
-                for namespace in $namespaces; do
-                    # Delete the existing secret if it exists
-                    kubectl delete secret --ignore-not-found $DOCKER_SECRET_NAME -n $namespace
-                    
-                    # Create the new Docker secret in the current namespace
-                    kubectl create secret docker-registry $DOCKER_SECRET_NAME \
-                        --docker-server=https://${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com \
-                        --docker-username=AWS \
-                        --docker-password="${ECR_TOKEN}" \
-                        --namespace=$namespace
-                    
-                    echo "Secret '$DOCKER_SECRET_NAME' was successfully updated in namespace '$namespace' at $(date)"
-                done
+              for namespace in $namespaces; do
+                  # Delete the existing secret if it exists
+                  kubectl delete secret --ignore-not-found $DOCKER_SECRET_NAME -n $namespace
+                  
+                  # Create the new Docker secret in the current namespace
+                  kubectl create secret docker-registry $DOCKER_SECRET_NAME \
+                      --docker-server=https://${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com \
+                      --docker-username=AWS \
+                      --docker-password="${ECR_TOKEN}" \
+                      --namespace=$namespace
+                  
+                  echo "Secret '$DOCKER_SECRET_NAME' was successfully updated in namespace '$namespace' at $(date)"
+              done
 
           restartPolicy: Never
 ---
@@ -77,12 +77,12 @@ kind: ClusterRole
 metadata:
   name: cluster-role-full-access-to-secrets
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["delete", "create"]
-- apiGroups: [""]
-  resources: ["namespaces"]  # Added permission to list namespaces
-  verbs: ["get", "list"]
+- apiGroups: [ "" ]
+  resources: [ "secrets" ]
+  verbs: [ "delete", "create" ]
+- apiGroups: [ "" ]
+  resources: [ "namespaces" ] # Added permission to list namespaces
+  verbs: [ "get", "list" ]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
