@@ -82,7 +82,7 @@ sudo apt update -y
 sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 source ~/.bashrc
 nvm list-remote
-nvm install v20.10.0
+nvm install v18.0.0
 
 ---
 

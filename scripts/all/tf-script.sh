@@ -61,15 +61,15 @@ tar -jxf phpMyAdmin-4.5.0.2-all-languages.tar.bz2 -C /var/www/html
 mv phpMyAdmin-4.5.0.2-all-languages phpmyadmin
 rm -rf phpMyAdmin-4.5.0.2-all-languages.tar.bz2
 
-# Configure phpMyAdmin blowfish secret
-CONFIG_FILE="/etc/phpmyadmin/config.inc.php"
-echo "🔑 Configuring blowfish secret for phpMyAdmin..."
-if [ -f "$CONFIG_FILE" ]; then
-    SECRET=$(openssl rand -base64 32)
-    sudo sed -i "s|\$cfg['blowfish_secret'] = ''|\$cfg['blowfish_secret'] = '$SECRET'|g" $CONFIG_FILE
-else
-    echo "❗ Configuration file not found: $CONFIG_FILE"
-fi
+# # Configure phpMyAdmin blowfish secret
+# CONFIG_FILE="/etc/phpmyadmin/config.inc.php"
+# echo "🔑 Configuring blowfish secret for phpMyAdmin..."
+# if [ -f "$CONFIG_FILE" ]; then
+#     SECRET=$(openssl rand -base64 32)
+#     sudo sed -i "s|\$cfg['blowfish_secret'] = ''|\$cfg['blowfish_secret'] = '$SECRET'|g" $CONFIG_FILE
+# else
+#     echo "❗ Configuration file not found: $CONFIG_FILE"
+# fi
 
 # Restart Apache to apply changes
 sudo systemctl restart apache2

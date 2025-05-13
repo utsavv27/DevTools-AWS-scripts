@@ -1,0 +1,21 @@
+sudo chown -R $USER:$USER .
+-> Create directory:
+sudo mkdir backend
+sudo chmod a+rwx backend
+cd /var/www/html/backend/
+
+-> Initialise GIT repo:
+git init .
+git remote add -t * -f origin mailto:git@123.201.19.225:nilesh/entrepotfrontend.git
+git checkout -f master
+- If getting error origin exist:
+git remote remove origin
+
+Add key:
+-> Generate key:
+ssh-keygen -t rsa -C “nilesh@logisticinfotech.co.in” -b 4096
+-> get key:  cat ~/.ssh/id_rsa.pub
+-> add key in your GitHub
+output of cat ~/.ssh/id_rsa.pub add in your GitHub key
+-> Install pm2
+npm install pm2 -g
