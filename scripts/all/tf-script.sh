@@ -46,7 +46,7 @@ sudo systemctl restart networkd-dispatcher.service
 sudo apt-get install mysql-server mysql-client -y
 sudo systemctl enable mysql.service
 sudo systemctl start mysql.service
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'pass';"
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PhXD(G&O]-Dtxr\I';"
 sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';"
 sudo mysql -e "CREATE DATABASE phpmyadmin;"
 sudo mysql -e "exit;"
