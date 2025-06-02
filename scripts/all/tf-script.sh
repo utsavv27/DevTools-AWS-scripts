@@ -4,9 +4,6 @@
 sudo apt-get update && sudo apt-get dist-upgrade -y
 sudo apt-get autoremove -y
 
-# Install needrestart to handle daemon restarts
-sudo apt-get install -y needrestart
-
 # Increase Swap Memory
 SWAP_SIZE="4G"
 SWAP_FILE="/swapfile"

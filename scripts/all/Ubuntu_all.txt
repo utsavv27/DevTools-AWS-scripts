@@ -135,6 +135,7 @@ sudo a2enmod proxy
 sudo a2enmod expires
 sudo a2enmod userdir
 sudo a2enmod auth_digest
+sudo a2enmod proxy_wstunnel
 
 ## Enable any Extra ports
 sudo ufw allow 3000 
