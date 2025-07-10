@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# MongoDB 6.0 Installation Script for Ubuntu 22.04
+# MongoDB 6.0 Installation Script for Ubuntu 22.04 with Custom Port and Bind IP
 
 set -e
 
@@ -18,11 +18,21 @@ sudo apt update
 echo "📥 Installing MongoDB 6.0..."
 sudo apt install -y mongodb-org
 
-echo "🚀 Starting and enabling MongoDB..."
-sudo systemctl start mongod
+echo "🛠 Modifying mongod.conf for custom port and bindIp..."
+
+# Backup original config
+sudo cp /etc/mongod.conf /etc/mongod.conf.backup
+
+# Replace port and bindIp
+sudo sed -i 's/^\( *port:\).*/\1 23723/' /etc/mongod.conf
+sudo sed -i 's/^\( *bindIp:\).*/\1 0.0.0.0/' /etc/mongod.conf
+
+echo "🚀 Restarting MongoDB with new configuration..."
+sudo systemctl restart mongod
 sudo systemctl enable mongod
 
 echo "✅ Checking MongoDB status..."
 sudo systemctl status mongod --no-pager
 
-echo "💡 To verify, run: mongosh"
+echo "✅ MongoDB is now listening on port 23723 and accessible from any IP address."
+echo "💡 To verify, run: mongosh --port 23723"
