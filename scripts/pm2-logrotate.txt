@@ -1,0 +1,16 @@
+  pm2 install pm2-logrotate
+  
+  # Set maximum log file size before rotation (e.g., 10M)
+  pm2 set pm2-logrotate:max_size 10M
+  
+  # Set number of rotated files to keep
+  pm2 set pm2-logrotate:retain 5
+  
+  # Rotate logs every day
+  pm2 set pm2-logrotate:rotateInterval '0 0 * * *'
+  
+  # Enable compression for rotated logs
+  pm2 set pm2-logrotate:compress true
+  
+  # Restart All pm2 process
+  pm2 restart all
