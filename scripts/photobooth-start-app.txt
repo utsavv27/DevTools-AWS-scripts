@@ -1,0 +1,21 @@
+
+
+1. for session in $(screen -ls | grep -oE '^[[:space:]]*[0-9]+\.[^[:space:]]+' | tr -d ' '); do   screen -S "$session" -X quit; done
+2. cd /var/www/html/frontend/src/app/smileScore/
+3. sudo rm -rf myenv
+4. cd /var/www/html/frontend
+5. git pull
+6. npm run build
+7. cd /var/www/html/frontend/src/app/smileScore/
+8. screen (after writing screen command press "ENTER")
+8. python3 -m venv myenv
+9. source myenv/bin/activate
+10. pip install -r requirements.txt
+11. python3 API.py
+
+
+# if port alredy in use error comes then do below things
+
+sudo lsof -i :9000 (by writing this command you can see the process id )
+
+sudo kill <process_id> -9
